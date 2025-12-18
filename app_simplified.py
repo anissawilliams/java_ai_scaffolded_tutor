@@ -16,7 +16,7 @@ from visuals import get_topic_visual
 
 
 # Configuration
-SESSION_DURATION = 20 * 60  # 20 minutes
+SESSION_DURATION = 10 * 60  # 10 minutes
 RESPONSE_TIMEOUT = 60  # 60 seconds before prompting
 
 
