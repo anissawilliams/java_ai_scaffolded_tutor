@@ -4,6 +4,7 @@ No CrewAI, no complex agent frameworks - just clean OpenAI API calls
 """
 
 import os
+import streamlit as st
 from typing import Optional, List, Dict
 from openai import OpenAI
 
@@ -12,11 +13,31 @@ class SimpleAIClient:
     """Handles all AI interactions with OpenAI"""
     
     def __init__(self):
-        api_key = os.getenv('OPENAI_API_KEY')
+        # Try Streamlit secrets first, then environment variable
+        try:
+            api_key = st.secrets["openai"]["api_key"]
+        except:
+            api_key = os.getenv('OPENAI_API_KEY')
+        
         if not api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment")
+            st.error("""
+            OpenAI API key not found!
+            
+            **Add to `.streamlit/secrets.toml`:**
+            ```
+            [openai]
+            api_key = "sk-..."
+            ```
+            
+            **Or set environment variable:**
+            ```
+            export OPENAI_API_KEY="sk-..."
+            ```
+            """)
+            raise ValueError("OPENAI_API_KEY not configured")
+        
         self.client = OpenAI(api_key=api_key)
-        self.model = "gpt-4"
+        self.model = "gpt-4o-mini"  # Fast and cost-effective for research
         
     def generate_response(self, system_prompt: str, user_message: str, 
                          conversation_history: Optional[List[Dict]] = None,
