@@ -58,7 +58,7 @@ class TutorFlow:
         user_lower = user_message.lower()
 
         if self.current_step == ScaffoldStep.INITIAL_METAPHOR:
-            # Advance after ANY substantive response
+            # Advance after ANY substantive response (fixes bug where it's kind of holding)
             return len(user_message) > 20
 
         elif self.current_step == ScaffoldStep.STUDENT_METAPHOR:
