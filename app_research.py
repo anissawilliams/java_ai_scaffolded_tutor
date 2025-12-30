@@ -27,10 +27,11 @@ from database import (
     get_session_status, get_next_session, get_user_condition
 )
 
+
 # Content
-from research_topics import get_research_topic, get_code_example
+from research_topics import get_research_topic
+#from code_examples import get_code_example  # <--- Import from the correct file
 from static_quiz import get_quiz, score_quiz
-from survey import render_survey, validate_survey_complete
 
 # AI and learning components
 from ai_client import SimpleAIClient
@@ -182,7 +183,7 @@ def start_session(session_id: str):
     # Initialize AI client
     st.session_state.ai_client = SimpleAIClient()
     st.session_state.current_session_id = session_id
-    st.session_state.start_time = time.time()
+
     
     # Save session start to database (only if not admin test)
     if not st.session_state.get('is_admin_test', False):
@@ -199,11 +200,13 @@ def start_session(session_id: str):
         else:
             # Condition 2: Start directly with generic tutor
             st.session_state.phase = 'learning'
+            st.session_state.start_time = time.time()
             st.session_state.session_active = True
             generate_initial_message(topic, condition)
     else:
         # Condition 3: Direct chat (no scaffolding)
         st.session_state.phase = 'learning'
+        st.session_state.start_time = time.time()
         st.session_state.session_active = True
         st.session_state.messages = []
         
@@ -286,6 +289,7 @@ def render_character_selection():
             if st.button(f"Choose {char_name}", key=f"char_{char_name}"):
                 st.session_state.selected_character = char_name
                 st.session_state.phase = 'learning'
+                st.session_state.start_time = time.time()
                 st.session_state.session_active = True
                 generate_initial_message(topic, 1)
                 st.rerun()
