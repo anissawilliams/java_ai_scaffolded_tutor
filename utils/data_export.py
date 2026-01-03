@@ -6,7 +6,7 @@ Export research data to CSV for analysis
 import csv
 import io
 from datetime import datetime
-from database import export_data_to_dict
+from utils.database import export_data_to_dict
 import streamlit as st
 
 
@@ -44,7 +44,7 @@ def generate_detailed_csv_with_messages() -> str:
     Generate detailed CSV including message-level data.
     Each row is a message (for conversation analysis).
     """
-    from database import get_all_users
+    from utils.database import get_all_users
     
     users = get_all_users()
     output = io.StringIO()
@@ -147,7 +147,7 @@ def render_admin_export():
     st.write("---")
     st.subheader("Study Statistics")
     
-    from database import get_all_users
+    from utils.database import get_all_users
     
     users = get_all_users()
     

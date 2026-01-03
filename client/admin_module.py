@@ -5,12 +5,13 @@ Special admin users can test all conditions and access export
 
 import streamlit as st
 from firebase_admin import db
-from typing import Optional
 
 # Admin emails - add your email(s) here
 ADMIN_EMAILS = [
     "anissawilliamschs@gmail.com",  # Replace with your actual email
-    "researcher@university.edu",
+    "hashemi@cofc.edu",
+    "rashidp@cofc.edu",
+    "tiwaria@cofc.edu"
     # Add more admin emails as needed
 ]
 
@@ -104,7 +105,7 @@ def render_admin_dashboard():
         st.write("---")
         
         st.write("**User Management**")
-        from database import get_all_users
+        from utils.database import get_all_users
         users = get_all_users()
         
         total_users = len([u for u in users.values() if not u.get('is_admin', False)])
@@ -130,9 +131,8 @@ def render_admin_dashboard():
     st.write("---")
     st.subheader("Test Sessions")
     
-    from config import SESSIONS
-    from database import get_session_status
-    
+    from utils.config import SESSIONS
+
     # Check if condition is selected
     if 'admin_test_condition' not in st.session_state:
         st.info("👆 Please select a condition above to start testing.")
@@ -169,14 +169,14 @@ def render_admin_dashboard():
     
     # Logout
     if st.button("Logout"):
-        from auth import logout_user
+        from utils.auth import logout_user
         logout_user()
         st.rerun()
 
 
 def start_admin_test_session(session_id: str):
     """Start a test session for admin."""
-    from research_topics import get_research_topic
+    from content.research_topics import get_research_topic
     from ai_client import SimpleAIClient
     from tutor_flow import TutorFlow
     import time

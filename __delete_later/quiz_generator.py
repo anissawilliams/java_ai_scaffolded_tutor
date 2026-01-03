@@ -3,9 +3,9 @@ Quiz Generator for Java Topics
 Generates understanding-check quizzes based on topics
 """
 
-from typing import List, Dict
-from topics import Topic, get_topic
-from ai_client import SimpleAIClient
+from typing import List
+from __delete_later.topics import get_topic
+from client.ai_client import SimpleAIClient
 
 
 class QuizQuestion:

@@ -5,42 +5,43 @@ Implements 3 experimental conditions with Firebase integration
 
 import streamlit as st
 import time
-from typing import Optional
 
 # Configuration and setup
-from config import (
+from utils.config import (
     SESSION_DURATION, CONDITIONS, SESSIONS,
-    SHOW_DEBUG_INFO, STUDY_INFO
+    STUDY_INFO
 )
 
 # Admin module
-from admin_module import (
-    is_admin, should_show_admin_dashboard, 
-    render_admin_dashboard, start_admin_test_session
+from client.admin_module import (
+    should_show_admin_dashboard,
+    render_admin_dashboard
 )
 
 # Authentication and data
-from auth import require_auth, render_login_page, get_user_data, logout_user
-from database import (
+from utils.auth import require_auth, render_login_page, get_user_data, logout_user
+from utils.database import (
     save_session_start, save_message, save_scaffold_progress,
     save_quiz_responses, save_survey_responses, complete_session,
-    get_session_status, get_next_session, get_user_condition
+    get_session_status, get_next_session
 )
 
 
 # Content
-from research_topics import get_research_topic
+from content.research_topics import get_research_topic
 #from code_examples import get_code_example  # <--- Import from the correct file
-from static_quiz import get_quiz, score_quiz
+from content.static_quiz import get_quiz, score_quiz
 
 # AI and learning components
-from ai_client import SimpleAIClient
-from characters import get_character, get_all_character_names
-from tutor_flow import TutorFlow, ScaffoldStep, StepGuide
-from visuals import get_topic_visual
+from client.ai_client import SimpleAIClient
+from characters import get_all_character_names
+from content.survey import render_survey, validate_survey_complete
+from tutor_flow.flow_manager import TutorFlow
+from tutor_flow.steps import ScaffoldStep
+from __delete_later.visuals import get_topic_visual
 
 # Admin
-from data_export import render_admin_export
+from utils.data_export import render_admin_export
 
 
 def initialize_session_state():
@@ -223,50 +224,55 @@ def start_session(session_id: str):
             save_message(st.session_state.user_id, session_id, 'assistant', welcome)
 
 
+from characters import get_character
+from tutor_flow.step_guide import StepGuide
+
 def generate_initial_message(topic, condition):
     """Generate the initial learning message."""
     session_id = st.session_state.current_session_id
-    
+
     if condition == 1:
-        # Character-based
         character = get_character(st.session_state.selected_character)
         system_prompt = character.get_system_prompt(topic.name)
     else:
-        # Generic tutor
-        system_prompt = f"""You are a helpful CS tutor teaching {topic.name}.
+        system_prompt = (
+            f"You are a helpful CS tutor teaching {topic.name}.\n\n"
+            "Your goal is to help the student understand the topic through:\n"
+            "1) metaphors and analogies\n"
+            "2) conceptual understanding\n"
+            "3) code examples\n"
+            "4) usage explanations\n\n"
+            "Be clear, encouraging, and keep responses under 150 words."
+        )
 
-Your goal is to help the student understand {topic.name} through:
-1. Starting with metaphors and analogies
-2. Building conceptual understanding
-3. Showing code examples
-4. Explaining usage
+    metaphor_prompt = StepGuide.get_metaphor_prompt(
+        "Tutor", topic.name, topic.concept
+    )
 
-Be clear, encouraging, and pedagogical. Keep responses concise (under 150 words)."""
-    
-    metaphor_prompt = StepGuide.get_metaphor_prompt("Tutor", topic.name, topic.concept)
-    
     try:
         initial_message = st.session_state.ai_client.generate_response(
             system_prompt=system_prompt,
             user_message=metaphor_prompt,
-            temperature=0.9
+            temperature=0.9,
         )
-    except:
-        # Fallback
-        initial_message = f"""Hello! Let's learn about {topic.name}.
+    except Exception:
+        initial_message = (
+            f"Hello! Let's learn about {topic.name}.\n\n"
+            f"{topic.metaphor_prompt}\n\n"
+            "What does this remind you of from your own experience?"
+        )
 
-{topic.metaphor_prompt}
-
-What does this remind you of from your own experience?"""
-    
     # Add to flow
-    st.session_state.flow.add_message('assistant', initial_message)
-    
-    # Save to database (only if not admin test)
-    if not st.session_state.get('is_admin_test', False):
-        save_message(st.session_state.user_id, session_id, 'assistant', initial_message, 
-                    step=st.session_state.flow.current_step.value)
+    st.session_state.flow.add_message("assistant", initial_message)
 
+    if not st.session_state.get("is_admin_test", False):
+        save_message(
+            st.session_state.user_id,
+            session_id,
+            "assistant",
+            initial_message,
+            step=st.session_state.flow.current_step.value,
+        )
 
 def render_character_selection():
     """Render character selection (Condition 1 only)."""
@@ -335,13 +341,13 @@ def handle_user_message_scaffolded(user_input: str):
         system_prompt = character.get_system_prompt(topic.name)
     else:
         system_prompt = f"You are a helpful CS tutor teaching {topic.name}."
-    
+
     response_prompt = StepGuide.get_response_prompt(
         "Tutor",
         topic.name,
         flow.current_step,
         user_input,
-        ""
+        flow.get_recent_context(5),
     )
     
     # Build conversation history

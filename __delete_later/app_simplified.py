@@ -5,14 +5,13 @@ Clean architecture with clear pedagogical flow
 
 import streamlit as st
 import time
-from typing import Optional
 
 from tutor_flow import TutorFlow, ScaffoldStep, StepGuide
-from ai_client import SimpleAIClient
+from client.ai_client import SimpleAIClient
 from characters import get_character, get_all_character_names
-from topics import get_topic, get_all_topic_names
-from quiz_generator import generate_quiz, QuizQuestion
-from visuals import get_topic_visual
+from __delete_later.topics import get_topic, get_all_topic_names
+from __delete_later.quiz_generator import generate_quiz
+from __delete_later.visuals import get_topic_visual
 
 
 # Configuration

@@ -5,10 +5,10 @@ Handles user login and session management with Firebase
 
 import streamlit as st
 import firebase_admin
-from firebase_admin import credentials, auth as firebase_auth, db
+from firebase_admin import credentials, db
 import pyrebase
-from firebase_config import FIREBASE_CONFIG, SERVICE_ACCOUNT_KEY
-from config import CONDITIONS, PARTICIPANTS_PER_CONDITION
+from utils.firebase_config  import FIREBASE_CONFIG, SERVICE_ACCOUNT_KEY
+from utils.config import CONDITIONS, PARTICIPANTS_PER_CONDITION
 import time
 
 # Initialize Firebase Admin (for backend operations)
