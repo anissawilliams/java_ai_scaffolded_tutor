@@ -36,7 +36,7 @@ from content.static_quiz import get_quiz, score_quiz
 from client.ai_client import SimpleAIClient
 from characters import get_all_character_names
 from content.survey import render_survey, validate_survey_complete
-from tutor_flow.flow_manager import TutorFlow
+import tutor_flow.flow_manager
 from tutor_flow.steps import ScaffoldStep
 from __delete_later.visuals import get_topic_visual
 
@@ -193,7 +193,7 @@ def start_session(session_id: str):
     # Initialize based on condition
     if condition in [1, 2]:  # Scaffolded conditions
         # Initialize flow
-        st.session_state.flow = TutorFlow(topic.name, "Tutor")
+        st.session_state.flow = tutor_flow.flow_manager.TutorFlow(topic.name, "Tutor")
         
         # For condition 1, let them select character
         if condition == 1:
