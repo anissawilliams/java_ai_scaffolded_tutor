@@ -1,0 +1,13 @@
+# Ignore secrets
+utils/firebase-config.json
+.streamlit/secrets.toml
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore node modules
+node_modules/
+
+# Ignore virtual environments
+.venv/
