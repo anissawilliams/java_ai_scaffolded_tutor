@@ -1,0 +1,46 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e7]:
+      - button "Deploy" [ref=e9] [cursor=pointer]:
+        - generic [ref=e11]: Deploy
+      - button [ref=e13] [cursor=pointer]:
+        - img [ref=e14]
+  - generic [ref=e19]:
+    - heading "☕ Java 221 Tutor" [level=1] [ref=e24]: ☕ Java 221 Tutor
+    - paragraph [ref=e30]: Welcome! Select a topic and character to begin your learning session.
+    - generic [ref=e32]:
+      - generic [ref=e34]:
+        - heading "📚 Select Topic" [level=3] [ref=e39]: 📚 Select Topic
+        - generic [ref=e42]:
+          - paragraph [ref=e45]: "Choose a topic to learn:"
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - generic [ref=e49]: Queue
+              - combobox "Selected Queue. Choose a topic to learn:" [ref=e51]
+            - img "open" [ref=e53]
+        - group [ref=e57]:
+          - generic "keyboard_arrow_right 📖 Topic Overview" [ref=e58] [cursor=pointer]:
+            - generic [ref=e59]:
+              - generic [ref=e61]: keyboard_arrow_right
+              - paragraph [ref=e64]: 📖 Topic Overview
+      - generic [ref=e66]:
+        - heading "🎭 Select Character" [level=3] [ref=e71]: 🎭 Select Character
+        - generic [ref=e74]:
+          - paragraph [ref=e77]: "Choose your tutor:"
+          - generic [ref=e79]:
+            - generic [ref=e80]:
+              - generic [ref=e81]: Batman
+              - combobox "Selected Batman. Choose your tutor:" [ref=e83]
+            - img "open" [ref=e85]
+        - group [ref=e89]:
+          - generic "keyboard_arrow_right 👤 Character Info" [ref=e90] [cursor=pointer]:
+            - generic [ref=e91]:
+              - generic [ref=e93]: keyboard_arrow_right
+              - paragraph [ref=e96]: 👤 Character Info
+    - separator [ref=e101]
+    - button "🚀 Start Learning Session" [ref=e104] [cursor=pointer]:
+      - paragraph [ref=e108]: 🚀 Start Learning Session
+```
