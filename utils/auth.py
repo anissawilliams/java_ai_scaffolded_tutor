@@ -10,9 +10,28 @@ from firebase_admin import credentials, auth as admin_auth
 def init_firebase():
     """Initialize Firebase Admin SDK once."""
     if not firebase_admin._apps:
-        cred = credentials.Certificate(st.secrets["firebase"])
+        # Extract only the service account fields
+        firebase_cfg = st.secrets["firebase"]
+        service_account_keys = {
+            "type",
+            "project_id",
+            "private_key_id",
+            "private_key",
+            "client_email",
+            "client_id",
+            "auth_uri",
+            "token_uri",
+            "auth_provider_x509_cert_url",
+            "client_x509_cert_url",
+        }
+
+        service_account_info = {
+            k: firebase_cfg[k] for k in service_account_keys if k in firebase_cfg
+        }
+
+        cred = credentials.Certificate(service_account_info)
         firebase_admin.initialize_app(cred, {
-            "databaseURL": st.secrets["firebase"]["databaseURL"]
+            "databaseURL": firebase_cfg["databaseURL"]
         })
 
 init_firebase()

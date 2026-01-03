@@ -5,24 +5,6 @@ Uses Streamlit secrets for secure credential management
 
 import streamlit as st
 import json
-# Load from Streamlit secrets
-# Local: .streamlit/secrets.toml
-# Cloud: App Settings > Secrets
-
-
-st.write("firebase raw:", st.secrets["firebase"])
-st.write("firebase type:", type(st.secrets["firebase"]))
-
-# Check if service account fields exist
-required_fields = [
-    "type", "project_id", "private_key_id", "private_key",
-    "client_email", "client_id", "token_uri"
-]
-
-missing = [f for f in required_fields if f not in st.secrets["firebase"]]
-st.write("Missing fields:", missing)
-
-
 
 try:
     FIREBASE_CONFIG = {
