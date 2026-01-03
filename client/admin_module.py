@@ -161,7 +161,7 @@ def render_admin_dashboard():
                     # Set admin test flag
                     st.session_state.is_admin_test = True
                     # Call the regular start_session function
-                    from app_research import start_session
+                    from app_simplified import start_session
                     start_session(session_id)
                     st.rerun()
             
